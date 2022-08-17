@@ -40,7 +40,8 @@ contract DAOFactory is Ownable,FactorySigner{
 
     function createGitDAO(Proposal memory proposal) external payable contains(Strings.toHexString(msg.sender),proposal.repoName){
         require(msg.value >= PRICE,"Underpaid");
-
+        //TODO: Change to clone proxy
+        new DAO(msg.sender);
     }
 
 
