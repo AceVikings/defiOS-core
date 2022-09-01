@@ -104,6 +104,8 @@ contract DAO is Ownable{
     }
 
     function addCollaborator(uint issue,address collaborator,string memory proof) external onlyOwner{
+        require(issue <= issueID && issue != 0,"Invalid issue");
+        require(repoIssues[issue].state == IssueState.OPEN,"Issue not open");
         collaborators[issue].push(collaboratorInfo(collaborator,proof,0));
     }
 
