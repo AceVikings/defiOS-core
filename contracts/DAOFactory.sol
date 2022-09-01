@@ -11,6 +11,15 @@ contract DAOFactory is Ownable,FactorySigner{
 
     uint public PRICE;
 
+    struct DAOInfo{
+        address owner;
+        address[] team;
+        string metadata;
+    }
+
+    mapping(address=>uint[]) userDAOs;
+    mapping(uint => DAOInfo) info;
+
     constructor(uint _price) FactorySigner("GitDAO","1"){
         PRICE = _price;
     }
@@ -38,10 +47,12 @@ contract DAOFactory is Ownable,FactorySigner{
         _;
     }
 
-    function createGitDAO(Proposal memory proposal) external payable contains(Strings.toHexString(msg.sender),proposal.repoName){
+    function createGitDAO(Proposal memory proposal,address[] memory partners,uint[] memory shares,
+    uint fees,string memory metadata,string memory tokenName,string memory tokenSymbol
+    ) external payable contains(Strings.toHexString(msg.sender),proposal.repoName){
         require(msg.value >= PRICE,"Underpaid");
         //TODO: Change to clone proxy
-        new DAO(msg.sender);
+        new DAO(msg.sender,proposal.repoName,partners,shares,fees,metadata,tokenName,tokenSymbol);
     }
 
 
