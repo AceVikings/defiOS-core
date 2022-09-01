@@ -131,7 +131,7 @@ contract DAO is Ownable{
         require(repoIssues[issue].state == IssueState.WINNERCHOSEN,"Winner not chosen or already paid");
         _changeIssueState(issue, 3);
         uint amount = repoIssues[issue].totalStaked;
-        TOKEN.transfer(msg.sender,amount);
+        TOKEN.transfer(repoIssues[issue].solver,amount);
     }
 
     function _changeIssueState(uint issue,uint8 state) private{
