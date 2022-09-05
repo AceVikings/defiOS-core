@@ -52,10 +52,6 @@ contract DAOFactory is Ownable,FactorySigner{
     }
 
 
-    function setPrice(uint _price) external onlyOwner{
-        PRICE = _price;
-    }
-
     function withdraw() external onlyOwner{
         payable(msg.sender).transfer(address(this).balance);
     }
