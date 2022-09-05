@@ -9,8 +9,6 @@ import "./FactorySigner.sol";
 
 contract DAOFactory is Ownable,FactorySigner{
 
-    uint public PRICE;
-
     struct DAOInfo{
         address owner;
         address[] team;
@@ -21,7 +19,6 @@ contract DAOFactory is Ownable,FactorySigner{
     mapping(uint => DAOInfo) info;
 
     constructor(uint _price) FactorySigner("GitDAO","1"){
-        PRICE = _price;
     }
 
     modifier contains (string memory what, string memory where) {
@@ -50,7 +47,6 @@ contract DAOFactory is Ownable,FactorySigner{
     function createGitDAO(Proposal memory proposal,address[] memory partners,uint[] memory shares,
     uint fees,string memory metadata,string memory tokenName,string memory tokenSymbol
     ) external payable contains(Strings.toHexString(msg.sender),proposal.repoName){
-        require(msg.value >= PRICE,"Underpaid");
         //TODO: Change to clone proxy
         new DAO(msg.sender,proposal.repoName,partners,shares,fees,metadata,tokenName,tokenSymbol);
     }
