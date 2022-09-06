@@ -13,12 +13,12 @@ contract Token is ERC20{
 
     uint public constant TOTAL_SUPPLY = 10_000_000 ether;
 
-    mapping(string => partnerInfo) public partner;
+    mapping(uint => partnerInfo) public partner;
 
     //@dev max supply of 10M 
     //@dev team supply should be less tha 1M and rest is minted to owner
     //@dev owner is expected to be user 0 in the list
-    constructor(string memory name,string memory symbol,string[] memory users,uint[] memory tokens) ERC20(name,symbol){
+    constructor(string memory name,string memory symbol,uint[] memory users,uint[] memory tokens) ERC20(name,symbol){
         require(users.length == tokens.length,"Length mismatch");
         uint amount = 0;
         for(uint i = 0;i<users.length;i++){
@@ -29,7 +29,7 @@ contract Token is ERC20{
         // _mint(users[0],TOTAL_SUPPLY - amount);
     }
 
-    function claimShare(string memory partnerId) external {
+    function claimShare(uint partnerId) external {
         require(!partner[partnerId].claimed,"Already claimed");
         partner[partnerId].claimed = true;
     }

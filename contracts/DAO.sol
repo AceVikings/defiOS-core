@@ -54,7 +54,7 @@ contract DAO is Ownable{
     string public NAME;
     string public METADATA;
 
-    string[] public TEAM;
+    uint[] public TEAM;
     uint public FEES;
 
     uint public issueID;
@@ -65,7 +65,7 @@ contract DAO is Ownable{
     mapping(string=>bool) public issueInitiated;
 
     // constructor - all about creating the ERC20 and determining the initial distribution of these ERC20 tokens
-    constructor(address _owner,string memory repo_name,string[] memory team,uint[] memory shares,
+    constructor(address _owner,string memory repo_name,uint[] memory team,uint[] memory shares,
         uint dao_fees,string memory metadata, string memory tokenName,string memory tokenSymbol) {
         transferOwnership(_owner);
         NAME = repo_name;

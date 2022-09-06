@@ -46,7 +46,7 @@ contract DAOFactory is Ownable,FactorySigner{
         _;
     }
 
-    function createGitDAO(Proposal memory proposal,string[] memory partners,uint[] memory shares,
+    function createGitDAO(Proposal memory proposal,uint[] memory partners,uint[] memory shares,
     uint fees,string memory metadata,string memory tokenName,string memory tokenSymbol
     ) external payable contains(Strings.toHexString(msg.sender),proposal.repoName){
         //TODO: Change to clone proxy
