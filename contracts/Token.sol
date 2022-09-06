@@ -6,20 +6,32 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract Token is ERC20{
 
+    struct partnerInfo{
+        uint amount;
+        bool claimed;
+    }
+
     uint public constant TOTAL_SUPPLY = 10_000_000 ether;
+
+    mapping(string => partnerInfo) public partner;
 
     //@dev max supply of 10M 
     //@dev team supply should be less tha 1M and rest is minted to owner
     //@dev owner is expected to be user 0 in the list
-    constructor(string memory name,string memory symbol,address[] memory users,uint[] memory tokens) ERC20(name,symbol){
+    constructor(string memory name,string memory symbol,string[] memory users,uint[] memory tokens) ERC20(name,symbol){
         require(users.length == tokens.length,"Length mismatch");
         uint amount = 0;
         for(uint i = 0;i<users.length;i++){
             amount += tokens[i];
-            _mint(users[i],tokens[i]);
+            partner[users[i]] = partnerInfo(tokens[i],false);
         }
         require(amount <= 1_000_000 ether,"Team share can't exceed 1M");
-        _mint(users[0],TOTAL_SUPPLY - amount);
+        // _mint(users[0],TOTAL_SUPPLY - amount);
+    }
+
+    function claimShare(string memory partnerId) external {
+        require(!partner[partnerId].claimed,"Already claimed");
+        partner[partnerId].claimed = true;
     }
 
 }
