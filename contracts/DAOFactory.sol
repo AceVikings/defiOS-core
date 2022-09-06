@@ -15,7 +15,7 @@ contract DAOFactory is Ownable,FactorySigner{
         string metadata;
     }
 
-    mapping(address=>uint[]) userDAOs;
+    mapping(address=>uint[]) public userDAOs;
     mapping(uint => DAOInfo) public info;
 
     uint public DAOID;
