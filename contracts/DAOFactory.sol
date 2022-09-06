@@ -11,12 +11,14 @@ contract DAOFactory is Ownable,FactorySigner{
 
     struct DAOInfo{
         address owner;
-        address[] team;
+        uint[] team;
         string metadata;
     }
 
     mapping(address=>uint[]) userDAOs;
-    mapping(uint => DAOInfo) info;
+    mapping(uint => DAOInfo) public info;
+
+    uint public DAOID;
 
     event DAOCreated(address DAO,address indexed creator);
 
@@ -48,12 +50,18 @@ contract DAOFactory is Ownable,FactorySigner{
 
     function createGitDAO(Proposal memory proposal,uint[] memory partners,uint[] memory shares,
     uint fees,string memory metadata,string memory tokenName,string memory tokenSymbol
-    ) external payable contains(Strings.toHexString(msg.sender),proposal.repoName){
+    ) external {
         //TODO: Change to clone proxy
+        DAOID++;
+        info[DAOID] = DAOInfo(msg.sender,partners,metadata);
+        userDAOs[msg.sender].push(DAOID);
         DAO newDAO = new DAO(msg.sender,proposal.repoName,partners,shares,fees,metadata,tokenName,tokenSymbol);
         emit DAOCreated(address(newDAO), msg.sender);
     }
 
+    function getUserDAOCount(address _user) external view returns(uint){
+        return userDAOs[_user].length;
+    }
 
     function withdraw() external onlyOwner{
         payable(msg.sender).transfer(address(this).balance);
