@@ -28,6 +28,7 @@ contract DAO is Ownable{
         IssueState state;
         uint totalStaked;
         address solver;
+        uint position;
     }
 
     // struct Commit {
@@ -63,6 +64,7 @@ contract DAO is Ownable{
     mapping(uint256=>stakerInfo[]) public stakers;
     mapping(uint256=>collaboratorInfo[]) public collaborators;
     mapping(string=>bool) public issueInitiated;
+    Issue[] public openIssues;
 
     // constructor - all about creating the ERC20 and determining the initial distribution of these ERC20 tokens
     constructor(address _owner,string memory repo_name,uint[] memory team,uint[] memory shares,
@@ -84,7 +86,8 @@ contract DAO is Ownable{
         require(!issueInitiated[url],"Duplicate issue");
         TOKEN.transferFrom(msg.sender,address(this),initialStake);
         issueID++;
-        repoIssues[issueID] = Issue(url,msg.sender,IssueState.OPEN,initialStake,address(0));
+        repoIssues[issueID] = Issue(url,msg.sender,IssueState.OPEN,initialStake,address(0),openIssues.length);
+        openIssues.push(repoIssues[issueID]);
         stakers[issueID].push(stakerInfo(msg.sender,initialStake,false));
         TOTALSTAKED += initialStake;
         issueInitiated[url] = true;
@@ -103,6 +106,7 @@ contract DAO is Ownable{
         require(repoIssues[issue].state == IssueState.VOTING,"Not voting");
         require(!stakers[issue][stakerId].voted,"Already voted");
         require(stakers[issue][stakerId].staker == msg.sender,"Invalid user");
+        popOpen(issue);
         collaborators[issue][collboratorId].votes += stakers[issue][stakerId].amount;
     }
 
@@ -143,21 +147,13 @@ contract DAO is Ownable{
         repoIssues[issue].state = IssueState(state);
     }
 
-    // Methods:
-    // create_issue() - which will just take metadata and push into the repo_issues mapping. payable 0.002 matic/sol
-    // change_issue_state() - creator can call to change issue state
-    // stake_on_issue() - checks is state is open then it stakes the tokens
-    // submit_solution() - allows all stakers to submit what they think is the right solution to the problem
-    // close_solution_submission() - to be called within submit_solution if all stakers have finished voting or it can be called by the dao owner
-    // redeem_rewards() - if state is winnerdeclared anyone can call this function and the amount will go to the winner
-    // add_commits() - basically this is a function where like the repo owner can add a commit to the commit history and stake a particular amount on the correctness of the commit hash and the tree hash
-    // read_commit() - returns repo_commits object
-    // function createIssue() external {
-    //     require()
-    // }
-
-
-
+    function popOpen(uint issueId) private{
+        Issue storage lastissue = openIssues[openIssues.length - 1];
+        uint currPosition = repoIssues[issueId].position;
+        openIssues[currPosition] = lastissue;
+        lastissue.position = currPosition;
+        openIssues.pop();
+    }
 
 
 }
