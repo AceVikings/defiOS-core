@@ -11,6 +11,7 @@ contract DAOFactory is Ownable,FactorySigner{
 
     struct DAOInfo{
         address owner;
+        address DAOAddress;
         uint[] team;
         string metadata;
     }
@@ -53,9 +54,9 @@ contract DAOFactory is Ownable,FactorySigner{
     ) external {
         //TODO: Change to clone proxy
         DAOID++;
-        info[DAOID] = DAOInfo(msg.sender,partners,metadata);
-        userDAOs[msg.sender].push(DAOID);
         DAO newDAO = new DAO(msg.sender,proposal.repoName,partners,shares,fees,metadata,tokenName,tokenSymbol);
+        info[DAOID] = DAOInfo(address(newDAO),msg.sender,partners,metadata);
+        userDAOs[msg.sender].push(DAOID);
         emit DAOCreated(address(newDAO), msg.sender);
     }
 
