@@ -58,7 +58,7 @@ contract DAO is Ownable{
     uint public FEES;
 
     uint public issueID;
-
+    uint public TOTALSTAKED;
     mapping(uint256=>Issue) public repoIssues;
     mapping(uint256=>stakerInfo[]) public stakers;
     mapping(uint256=>collaboratorInfo[]) public collaborators;
@@ -86,13 +86,16 @@ contract DAO is Ownable{
         issueID++;
         repoIssues[issueID] = Issue(url,msg.sender,IssueState.OPEN,initialStake,address(0));
         stakers[issueID].push(stakerInfo(msg.sender,initialStake,false));
+        TOTALSTAKED += initialStake;
         issueInitiated[url] = true;
     }
 
     function stakeOnIssue(uint issue,uint amount) external {
         require(issue <= issueID && issue != 0,"Invalid issue");
         require(repoIssues[issue].state == IssueState.OPEN,"Issue not open");
+        require(amount > 0,"Can't stake 0");
         TOKEN.transferFrom(msg.sender,address(this),amount);
+        TOTALSTAKED += amount;
         repoIssues[issue].totalStaked += amount;
     }   
 
@@ -124,6 +127,7 @@ contract DAO is Ownable{
             } 
         }
         require(selected,"No majority reached");
+        TOTALSTAKED -= repoIssues[issue].totalStaked;
         _changeIssueState(issue, 2);
     }
 
