@@ -155,5 +155,9 @@ contract DAO is Ownable{
         openIssues.pop();
     }
 
+    function getOpenIssueCount() external view returns(uint){
+        return openIssues.length;
+    }
+
 
 }
