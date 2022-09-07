@@ -49,7 +49,7 @@ contract DAO is Ownable{
     //     Commit solution_end_commit;
     // }
 
-    IERC20 TOKEN;
+    IERC20 public TOKEN;
 
     string public NAME;
     string public METADATA;
