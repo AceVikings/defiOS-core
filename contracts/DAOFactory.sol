@@ -64,6 +64,10 @@ contract DAOFactory is Ownable,FactorySigner{
         return userDAOs[_user].length;
     }
 
+    function getDAOInfo(uint id) external view returns(DAOInfo memory){
+        return info[id];
+    }
+
     function withdraw() external onlyOwner{
         payable(msg.sender).transfer(address(this).balance);
     }
