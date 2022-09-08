@@ -60,8 +60,11 @@ contract DAO is Ownable{
 
     uint public issueID;
     uint public TOTALSTAKED;
+
     mapping(uint256=>Issue) public repoIssues;
     mapping(uint256=>stakerInfo[]) public stakers;
+    mapping(uint256=>mapping(address=>uint)) stakePosition;
+    mapping(uint256=>mapping(address=>bool)) staked;
     mapping(uint256=>collaboratorInfo[]) public collaborators;
     mapping(string=>bool) public issueInitiated;
     Issue[] public openIssues;
@@ -90,6 +93,7 @@ contract DAO is Ownable{
         repoIssues[issueID] = Issue(url,msg.sender,IssueState.OPEN,initialStake,address(0),openIssues.length);
         openIssues.push(repoIssues[issueID]);
         stakers[issueID].push(stakerInfo(msg.sender,initialStake,false));
+        staked[issueID][msg.sender] = true;
         TOTALSTAKED += initialStake;
         issueInitiated[url] = true;
     }
@@ -99,7 +103,14 @@ contract DAO is Ownable{
         require(repoIssues[issue].state == IssueState.OPEN,"Issue not open");
         require(amount > 0,"Can't stake 0");
         TOKEN.transferFrom(msg.sender,address(this),amount);
-        stakers[issueID].push(stakerInfo(msg.sender,amount,false));
+        if(!staked[issue][msg.sender]){
+            stakers[issue].push(stakerInfo(msg.sender,amount,false));
+            staked[issue][msg.sender] = true;
+            stakePosition[issue][msg.sender] = stakers[issue].length - 1;
+        }
+        else{
+            stakers[issue][stakePosition[issue][msg.sender]].amount += amount;
+        }
         TOTALSTAKED += amount;
         repoIssues[issue].totalStaked += amount;
     }   
