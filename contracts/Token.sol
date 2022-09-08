@@ -34,4 +34,8 @@ contract Token is ERC20{
         partner[partnerId].claimed = true;
     }
 
+    function mint(address to,uint amount) external {
+        _mint(to,amount);
+    }
+
 }

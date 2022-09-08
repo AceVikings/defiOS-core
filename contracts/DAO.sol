@@ -50,7 +50,7 @@ contract DAO is Ownable{
     //     Commit solution_end_commit;
     // }
 
-    IERC20 public TOKEN;
+    Token public TOKEN;
 
     string public NAME;
     string public METADATA;
@@ -75,6 +75,7 @@ contract DAO is Ownable{
         FEES = dao_fees;
         METADATA = metadata;
         TOKEN = new Token(tokenName,tokenSymbol,team,shares);
+        TOKEN.mint(owner(),500 ether);
     }
     
     modifier onlyHolder{
