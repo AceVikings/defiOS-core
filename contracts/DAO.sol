@@ -99,6 +99,7 @@ contract DAO is Ownable{
         require(repoIssues[issue].state == IssueState.OPEN,"Issue not open");
         require(amount > 0,"Can't stake 0");
         TOKEN.transferFrom(msg.sender,address(this),amount);
+        stakers[issueID].push(stakerInfo(msg.sender,amount,false));
         TOTALSTAKED += amount;
         repoIssues[issue].totalStaked += amount;
     }   
