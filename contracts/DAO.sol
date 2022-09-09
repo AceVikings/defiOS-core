@@ -18,6 +18,7 @@ contract DAO is Ownable{
 
     struct collaboratorInfo{
         address collaborator;
+        string url;
         string proof;
         uint votes;
     }
@@ -123,10 +124,10 @@ contract DAO is Ownable{
         collaborators[issue][collboratorId].votes += stakers[issue][stakerId].amount;
     }
 
-    function addCollaborator(uint issue,address collaborator,string memory proof) external onlyOwner{
+    function addCollaborator(uint issue,string memory url,address collaborator,string memory proof) external onlyOwner{
         require(issue <= issueID && issue != 0,"Invalid issue");
         require(repoIssues[issue].state == IssueState.OPEN,"Issue not open");
-        collaborators[issue].push(collaboratorInfo(collaborator,proof,0));
+        collaborators[issue].push(collaboratorInfo(collaborator,url,proof,0));
     }
 
     function startVoting(uint issue) external onlyOwner{
@@ -170,6 +171,14 @@ contract DAO is Ownable{
 
     function getOpenIssueCount() external view returns(uint){
         return openIssues.length;
+    }
+
+    function getCollaboratorCount(uint issueId) external view returns(uint){
+        return collaborators[issueId].length;
+    }
+
+    function getStakersCount(uint issueId) external view returns(uint){
+        return stakers[issueId].length;
     }
 
 
