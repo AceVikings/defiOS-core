@@ -19,7 +19,7 @@ contract DAO is Ownable{
     struct collaboratorInfo{
         address collaborator;
         string url;
-        string proof;
+        string[4] commitHashes;
         uint votes;
     }
 
@@ -67,6 +67,7 @@ contract DAO is Ownable{
     mapping(uint256=>mapping(address=>uint)) stakePosition;
     mapping(uint256=>mapping(address=>bool)) staked;
     mapping(uint256=>collaboratorInfo[]) public collaborators;
+    mapping(uint256=>mapping(address=>bool)) public collaboratorAdded;
     mapping(string=>bool) public issueInitiated;
     Issue[] public openIssues;
 
@@ -124,10 +125,11 @@ contract DAO is Ownable{
         collaborators[issue][collboratorId].votes += stakers[issue][stakerId].amount;
     }
 
-    function addCollaborator(uint issue,string memory url,address collaborator,string memory proof) external onlyOwner{
+    function addCollaborator(uint issue,string memory url,string[4] memory proof) external {
         require(issue <= issueID && issue != 0,"Invalid issue");
         require(repoIssues[issue].state == IssueState.OPEN,"Issue not open");
-        collaborators[issue].push(collaboratorInfo(collaborator,url,proof,0));
+        require(!collaboratorAdded[issue][msg.sender],"Already added");
+        collaborators[issue].push(collaboratorInfo(msg.sender,url,proof,0));
     }
 
     function startVoting(uint issue) external onlyOwner{
@@ -135,7 +137,7 @@ contract DAO is Ownable{
         _changeIssueState(issue, 1);
     }
 
-    function chooseWinner(uint issue) external onlyOwner{
+    function chooseWinner(uint issue) external {
         require(repoIssues[issue].state == IssueState.VOTING,"Issue not voting");
         bool selected = false; 
         for(uint i=0;i<collaborators[issue].length;i++){
