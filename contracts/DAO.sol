@@ -123,6 +123,7 @@ contract DAO is Ownable{
         require(stakers[issue][stakerId].staker == msg.sender,"Invalid user");
         popOpen(issue);
         collaborators[issue][collboratorId].votes += stakers[issue][stakerId].amount;
+        stakers[issue][stakerId].voted = true;
     }
 
     function addCollaborator(uint issue,string memory url,string[4] memory proof) external {
