@@ -21,9 +21,12 @@ contract DAOFactory is Ownable,FactorySigner{
 
     uint public DAOID;
 
+    address public Router;
+
     event DAOCreated(address DAO,address indexed creator);
 
-    constructor(uint _price) FactorySigner("GitDAO","1"){
+    constructor(address _router) FactorySigner("GitDAO","1"){
+        defiOSRouter = _router;
     }
 
     modifier contains (string memory what, string memory where) {
@@ -66,6 +69,10 @@ contract DAOFactory is Ownable,FactorySigner{
 
     function getDAOInfo(uint id) external view returns(DAOInfo memory){
         return info[id];
+    }
+
+    function setDefiOSRouter(address _router) external onlyOwner{
+        Router = _router;
     }
 
     function withdraw() external onlyOwner{

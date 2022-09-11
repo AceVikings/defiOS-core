@@ -32,31 +32,12 @@ contract DAO is Ownable{
         uint position;
     }
 
-    // struct Commit {
-    //     string working_tree_hash;
-    //     string commit_hash;
-    //     IssueState state;
-    //     CommitType commit_type;
-    // }
-
-    // struct Issue {
-    //     string issue_url;
-    //     address issue_creator;
-    //     IssueState state;
-    //     mapping(string => mapping(address=>uint256)) issue_stakers;
-    //     address issue_solver_wallet;
-    //     mapping(string=>uint256) possible_solution_start_commit_hash;
-    //     mapping(string=>uint256) possible_solution_end_commit_hash;
-    //     Commit solution_start_commit;
-    //     Commit solution_end_commit;
-    // }
-
     Token public TOKEN;
 
     string public NAME;
     string public METADATA;
 
-    uint[] public TEAM;
+    string[] public TEAM;
     uint public FEES;
 
     uint public issueID;
@@ -72,15 +53,14 @@ contract DAO is Ownable{
     Issue[] public openIssues;
 
     // constructor - all about creating the ERC20 and determining the initial distribution of these ERC20 tokens
-    constructor(address _owner,string memory repo_name,uint[] memory team,uint[] memory shares,
+    constructor(address _owner,string memory repo_name,string[] memory team,uint[] memory shares,
         uint dao_fees,string memory metadata, string memory tokenName,string memory tokenSymbol) {
         transferOwnership(_owner);
         NAME = repo_name;
         TEAM = team;
         FEES = dao_fees;
         METADATA = metadata;
-        TOKEN = new Token(tokenName,tokenSymbol,team,shares);
-        TOKEN.mint(owner(),500 ether);
+        TOKEN = new Token(tokenName,tokenSymbol,team,shares,msg.sender);
     }
     
     modifier onlyHolder{
