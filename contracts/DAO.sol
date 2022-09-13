@@ -110,6 +110,7 @@ contract DAO is Ownable{
         require(issue <= issueID && issue != 0,"Invalid issue");
         require(repoIssues[issue].state == IssueState.OPEN,"Issue not open");
         require(!collaboratorAdded[issue][msg.sender],"Already added");
+        collaboratorAdded[issue][msg.sender] = true;
         collaborators[issue].push(collaboratorInfo(msg.sender,url,proof,0));
     }
 

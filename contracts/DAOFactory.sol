@@ -12,7 +12,7 @@ contract DAOFactory is Ownable,FactorySigner{
     struct DAOInfo{
         address owner;
         address DAOAddress;
-        uint[] team;
+        string[] team;
         string metadata;
     }
 
@@ -26,7 +26,7 @@ contract DAOFactory is Ownable,FactorySigner{
     event DAOCreated(address DAO,address indexed creator);
 
     constructor(address _router) FactorySigner("GitDAO","1"){
-        defiOSRouter = _router;
+        Router = _router;
     }
 
     modifier contains (string memory what, string memory where) {
@@ -52,7 +52,7 @@ contract DAOFactory is Ownable,FactorySigner{
         _;
     }
 
-    function createGitDAO(Proposal memory proposal,uint[] memory partners,uint[] memory shares,
+    function createGitDAO(Proposal memory proposal,string[] memory partners,uint[] memory shares,
     uint fees,string memory metadata,string memory tokenName,string memory tokenSymbol
     ) external {
         //TODO: Change to clone proxy
