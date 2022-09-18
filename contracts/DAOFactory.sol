@@ -56,8 +56,8 @@ contract DAOFactory is Ownable,FactorySigner{
     function createGitDAO(Proposal memory proposal,string[] memory partners,uint[] memory shares,
     uint fees,string memory metadata,string memory tokenName,string memory tokenSymbol
     ) external {
-        require(!daoExists[proposal.repoName],"Already exists");
-        daoExists[proposal.repoName] = true;
+        require(!daoExists[proposal.repoID],"Already exists");
+        daoExists[proposal.repoID] = true;
         //TODO: Change to clone proxy
         DAOID++;
         DAO newDAO = new DAO(msg.sender,proposal.repoName,partners,shares,fees,metadata,tokenName,tokenSymbol);

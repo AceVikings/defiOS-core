@@ -8,6 +8,7 @@ contract FactorySigner is EIP712{
 
     struct Proposal{
         string repoURL;
+        string repoID;
         string repoName;
         address user;
         bytes signature;
@@ -23,8 +24,9 @@ contract FactorySigner is EIP712{
   
     function _hash(Proposal memory result) internal view returns (bytes32) {
     return _hashTypedDataV4(keccak256(abi.encode(
-      keccak256("Proposal(string repoURL,string repoName,address user)"),
+      keccak256("Proposal(string repoURL,string repoID,string repoName,address user)"),
       keccak256(bytes(result.repoURL)),
+      keccak256(bytes(result.repoID)),
       keccak256(bytes(result.repoName)),
       result.user
     )));
