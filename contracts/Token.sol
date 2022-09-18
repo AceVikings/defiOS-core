@@ -16,7 +16,7 @@ contract Token is ERC20{
         bool claimed;
     }
 
-    uint public constant TOTAL_SUPPLY = 10_000_000 ether;
+    uint public constant TOTAL_SUPPLY = 1_000_000 ether;
 
     mapping(string => partnerInfo) public partner;
 
@@ -31,7 +31,7 @@ contract Token is ERC20{
             amount += tokens[i];
             partner[users[i]] = partnerInfo(tokens[i],false);
         }
-        require(amount <= 2_500_000 ether,"Team share can't exceed 1M");
+        require(amount <= 250_000 ether,"Team share can't exceed 1M");
         factory = Factory(_factory);
     }
 
