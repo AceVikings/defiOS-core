@@ -31,7 +31,7 @@ contract Token is ERC20{
             amount += tokens[i];
             partner[users[i]] = partnerInfo(tokens[i],false);
         }
-        require(amount <= 250_000 ether,"Team share can't exceed 1M");
+        require(amount <= 250_000 ether,"Team share can't exceed 250k");
         factory = Factory(_factory);
     }
 
