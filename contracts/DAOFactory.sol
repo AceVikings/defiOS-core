@@ -61,7 +61,7 @@ contract DAOFactory is Ownable,FactorySigner{
         //TODO: Change to clone proxy
         DAOID++;
         DAO newDAO = new DAO(msg.sender,proposal.repoName,partners,shares,fees,metadata,tokenName,tokenSymbol);
-        info[DAOID] = DAOInfo(address(newDAO),msg.sender,partners,metadata);
+        info[DAOID] = DAOInfo(msg.sender,address(newDAO),partners,metadata);
         userDAOs[msg.sender].push(DAOID);
         emit DAOCreated(address(newDAO), msg.sender);
     }
